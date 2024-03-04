@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <!-- Tailwind Css -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Calulator</title>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        poppins: "Poppins"
+                    }
+                }
+            }
+        }
+    </script>
+
+</head>
+
+<body class="bg-slate-800">
+
+    <section id="app">
+        <!-- Invalid input Model -->
+        <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-zinc-700 bg-opacity-70">
+            <div class="bg-white p-6 rounded-lg shadow-xl">
+              <p class="text-red-600 text-lg font-semibold">Invalid input</p>
+              <button @click="hideModal" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md">Close</button>
+            </div>
+          </div>
+          
+        <div class="max-w-5xl mx-auto flex items-center justify-center h-screen">
+            <div class="flex flex-col items-center justify-center space-y-10 p-6">
+
+                <div>
+                    <h1 class="font-poppins text-2xl font-semibold text-white">Calculator </h1>
+                </div>
+                <form @submit.prevent>
+                    <div class="flex flex-col items-center justify-center space-y-10">
+                        <input type="text" v-on:input="inputvalues" v-bind:placeholder="placeholder"
+                            v-bind:value="result"
+                            class="border rounded-sm p-2 font-semibold text-sm  border-blue-700 border-2 focus:outline-none">
+
+                        <button v-on:click="calculate"
+                            class="bg-gradient-to-r from-blue-500 to-green-500 px-6 py-2 rounded-sm bg-opacity-50 shadow shadow-blue-700 hover:shadow-6xl font-poppins text-xs font-semibold">Calculate</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/vue@3.2.0"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    placeholder: "Calulator",
+                    initialValue: "",
+                    finalValue: "",
+                    result: "",
+                    showModal: false,
+                }
+            },
+            methods: {
+
+                hideModal() {
+                    this.showModal = false; // Hide the modal
+                },
+
+                inputvalues() {
+                    this.initialValue = event.target.value;
+                    this.finalValue = this.initialValue.split(/(\+|\-|\*|\/)/);
+                    console.log(this.finalValue)
+                },
+
+                calculate() {
+
+                    const globalval = this;
+
+                    if (globalval.finalValue.length === 3) {
+                        let operand1 = parseFloat(globalval.finalValue[0]);
+                        let operand2 = parseFloat(globalval.finalValue[2]);
+                        let operator = globalval.finalValue[1];
+
+                        switch (operator) {
+                            case '+':
+                                globalval.result = operand1 + operand2;
+                                break;
+                            case '-':
+                                globalval.result = operand1 - operand2;
+                                break;
+                            case '*':
+                                globalval.result = operand1 * operand2;
+                                break;
+                            case '/':
+                                globalval.result = operand1 / operand2;
+                                break;
+                            default:
+                                this.showModal = true;
+                        }
+                    } else {
+                        this.showModal = true;
+                    }
+
+
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+
+</body>
+
+</html>
